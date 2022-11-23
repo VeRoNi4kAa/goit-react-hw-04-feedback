@@ -1,53 +1,58 @@
-import {Component} from 'react'
+import React, {useState} from 'react'
 import FeedbackOptions from './components/FeedbackOptions'
 import Statistics from './components/Statistics'
 import Section from './components/Section'
 
+export default function App() {
+    const [good, setGood] = useState(0);
+    const [neutral, setNeutral] = useState(0);
+    const [bad, setBad] = useState(0);
 
-export default class App extends Component {
+    const arrayNames = [`good`, `neutral`, `bad`];
 
-    state = {
-        good: 0,
-        neutral: 0,
-        bad: 0
-    }
-    
-    handleIncrement = option=> {
-        this.setState(prevState => ({
-            [option]: prevState[option] + 1    
-        }));
-    }
-
-    countTotalFeedback = ({good, neutral, bad}) => {
-       return good + neutral + bad
-    }
-
-    countPositiveFeedbackPercentage = ({neutral, bad}) => {
-        const difference =  this.countTotalFeedback(this.state) - (neutral + bad)
-        return (Math.round(difference*100/this.countTotalFeedback(this.state)))
-    }
-
-    createArrayKeysState = () => Object.keys(this.state);
+    const handleIncrement = options => {
+        switch (options) {
+            case 'good':
+                setGood(prevState => prevState + 1);
+                break;
+            case 'neutral':
+                setNeutral(prevState => prevState + 1);
+                break;
+            case 'bad':
+                setBad(prevState => prevState + 1);
+                break;
+                default:
+                break;
+        }
+    };
 
 
-    render() {
-        const { good, neutral, bad } = this.state;
+     const countTotalFeedback = () => {
+       return good + neutral + bad;
+    };
 
-        return <>
+    const countPositiveFeedbackPercentage = () => {
+        const difference = countTotalFeedback() - (neutral + bad);
+        return Math.round(difference*100/countTotalFeedback())    
+    };
+
+
+        return (
+        <>
             <Section title={'Please leave feedback'}>
                 <FeedbackOptions
-                    options={this.createArrayKeysState()}
-                    onLeaveFeedback={this.handleIncrement}
+                    options={arrayNames}
+                    onLeaveFeedback={handleIncrement}
                 ></FeedbackOptions>
                 <Statistics
                     good={good}
                     neutral={neutral}
                     bad={bad}
-                    total={this.countTotalFeedback(this.state)}
-                    positivePercentage={this.countPositiveFeedbackPercentage(this.state)} >
+                    total={countTotalFeedback()}
+                    positivePercentage={countPositiveFeedbackPercentage()} >
                 </Statistics>
             </Section>
         </>    
-    }
+        );
 }
         
