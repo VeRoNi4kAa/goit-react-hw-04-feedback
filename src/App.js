@@ -41,14 +41,14 @@ export default function App() {
         <FeedbackOptions
           options={arrayNames}
           onLeaveFeedback={handleIncrement}
-        ></FeedbackOptions>
+        />
         <Statistics
           good={good}
           neutral={neutral}
           bad={bad}
           total={countTotalFeedback()}
           positivePercentage={countPositiveFeedbackPercentage()}
-        ></Statistics>
+        />
       </Section>
     </>
   );
