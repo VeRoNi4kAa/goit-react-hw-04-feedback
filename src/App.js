@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FeedbackOptions from './components/FeedbackOptions';
 import Statistics from './components/Statistics';
 import Section from './components/Section';
@@ -7,6 +7,9 @@ export default function App() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const [countTotalFeedback, setCountTotalFeedback] = useState(0);
+  const [countPositiveFeedbackPercentage, setCountPositiveFeedbackPercentage] =
+    useState(0);
 
   const arrayNames = [`good`, `neutral`, `bad`];
 
@@ -26,14 +29,14 @@ export default function App() {
     }
   };
 
-  const countTotalFeedback = () => {
-    return good + neutral + bad;
-  };
+  useEffect(() => {
+    let countTotalFeedback = good + neutral + bad;
+    setCountTotalFeedback(countTotalFeedback);
 
-  const countPositiveFeedbackPercentage = () => {
-    const difference = countTotalFeedback() - (neutral + bad);
-    return Math.round((difference * 100) / countTotalFeedback());
-  };
+    setCountPositiveFeedbackPercentage(
+      Math.round((good / countTotalFeedback) * 100)
+    );
+  }, [good, neutral, bad]);
 
   return (
     <>
@@ -46,8 +49,8 @@ export default function App() {
           good={good}
           neutral={neutral}
           bad={bad}
-          total={countTotalFeedback()}
-          positivePercentage={countPositiveFeedbackPercentage()}
+          total={countTotalFeedback}
+          positivePercentage={countPositiveFeedbackPercentage}
         />
       </Section>
     </>
